@@ -39,7 +39,7 @@ Spring Boot 기반의 **스마트 영수증 인식 및 소비 관리 서비스**
 ## 📂 패키지 구조 (Directory Structure)
 
 ```text
-src/main/java/com/example/project_boot/
+src/main/java/com/example/BlackLetters_spring_boot/
 ├── config/                 # 설정 클래스 (AWS, Security 등)
 │   ├── AwsConfig.java      # AWS S3, Textract 클라이언트 빈 등록
 │   └── security/           # Security & JWT 필터 및 공급자
