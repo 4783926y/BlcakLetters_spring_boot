@@ -1,5 +1,6 @@
 package com.example.BlackLetters_spring_boot.service;
 
+import com.example.BlackLetters_spring_boot.controller.ReceiptResponse;
 import com.example.BlackLetters_spring_boot.domain.*;
 import com.example.BlackLetters_spring_boot.persistence.CategoryRepository;
 import com.example.BlackLetters_spring_boot.persistence.ReceiptItemRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class ReceiptService {
                 .build();
         receipt = receiptRepository.save(receipt);
 
-        // 2. OCR 텍스트 추출
+        // 3. OCR 텍스트 추출
         Map<String, Object> extractedData = geminiOcrService.extractExpenseInfo(file);
 
         String merchantName = (String) extractedData.get("merchantName");
@@ -79,7 +81,15 @@ public class ReceiptService {
     }
 
     @Transactional(readOnly = true)
-    public List<Receipt> getUserReceipts(Long userId) {
-        return receiptRepository.findByUserUserIdOrderByTransactionDateDesc(userId);
+    public List<ReceiptResponse> getUserReceipts(Long userId) {
+        List<Receipt> receipts = receiptRepository.findByUserUserIdOrderByTransactionDateDesc(userId);
+
+        // imagePath → presigned URL로 변환 후 DTO로 반환
+        return receipts.stream()
+                .map(receipt -> {
+                    String imageUrl = s3UploadService.getPresignedUrl(receipt.getImagePath());
+                    return new ReceiptResponse(receipt, imageUrl);
+                })
+                .collect(Collectors.toList());
     }
 }

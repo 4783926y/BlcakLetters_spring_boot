@@ -24,7 +24,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "name", length = 100)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -22,14 +22,14 @@ public class ReceiptController {
             @AuthenticationPrincipal Long userId,
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("file") MultipartFile file) throws Exception {
-        
+
         Receipt receipt = receiptService.processReceiptAndSave(userId, categoryId, file);
         return ResponseEntity.ok(receipt);
     }
 
     @GetMapping
-    public ResponseEntity<List<Receipt>> getReceipts(@AuthenticationPrincipal Long userId) {
-        List<Receipt> receipts = receiptService.getUserReceipts(userId);
+    public ResponseEntity<List<ReceiptResponse>> getReceipts(@AuthenticationPrincipal Long userId) {
+        List<ReceiptResponse> receipts = receiptService.getUserReceipts(userId);
         return ResponseEntity.ok(receipts);
     }
 }

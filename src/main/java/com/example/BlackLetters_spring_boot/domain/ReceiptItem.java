@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "receipt_items")
@@ -19,6 +21,7 @@ public class ReceiptItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Receipt receipt;
 
     @Column(name = "item_name", nullable = false)
@@ -27,7 +30,7 @@ public class ReceiptItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 
-    @Column(name = "unit_price", nullable = false)
+    @Column(name = "unit_price")
     private Integer unitPrice = 0;
 
     @Column(name = "amount", nullable = false)
